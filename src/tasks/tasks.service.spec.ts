@@ -38,4 +38,23 @@ describe('Task Service', () => {
   it('should be defined', () => {
     expect(taskService).toBeDefined();
   });
+
+  describe('Tasks Service', () => {
+    it('should list Tasks', async () => {
+      const tasks = await taskService.findAll();
+      expect(tasks.length).toBe(0);
+    });
+
+    it('should not create Task with falsy params', async () => {
+      expect.assertions(3);
+      try {
+        await taskService.create(null);
+      } catch (error) {
+        error = error as Error;
+        expect(error.name).toEqual('ValidationError');
+        expect(error.errors).not.toBeNull();
+        expect(error.errors.name).not.toBeNull();
+      }
+    });
+  });
 });

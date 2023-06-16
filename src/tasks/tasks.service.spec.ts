@@ -4,6 +4,7 @@ import { Task, TaskSchema } from '../schemas/task.schema';
 import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as mongoose from 'mongoose';
+import { CreateTaskDto } from '../dto/create-task.dto';
 
 describe('Task Service', () => {
   let taskService: TasksService;
@@ -53,8 +54,16 @@ describe('Task Service', () => {
         error = error as Error;
         expect(error.name).toEqual('ValidationError');
         expect(error.errors).not.toBeNull();
-        expect(error.errors.name).not.toBeNull();
+        expect(error.errors.title).not.toBeNull();
       }
+    });
+
+    it('should not create Task without title', async () => {
+      expect(
+        taskService.create({
+          description: 'sample description',
+        } as CreateTaskDto),
+      ).rejects.toThrowError();
     });
   });
 });

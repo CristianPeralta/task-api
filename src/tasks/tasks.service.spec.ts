@@ -5,6 +5,7 @@ import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import * as mongoose from 'mongoose';
 import { CreateTaskDto } from '../dto/create-task.dto';
+import { ValidationPipe } from '@nestjs/common';
 
 describe('Task Service', () => {
   let taskService: TasksService;
@@ -24,6 +25,11 @@ describe('Task Service', () => {
     }).compile();
 
     taskService = module.get<TasksService>(TasksService);
+
+    const app = module.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe());
+    await app.init();
+
     mongooseConnection = module.get<mongoose.Connection>(getConnectionToken());
   });
 
@@ -64,6 +70,18 @@ describe('Task Service', () => {
           description: 'sample description',
         } as CreateTaskDto),
       ).rejects.toThrowError();
+    });
+
+    it('should not create Task without arguments', async () => {
+      const callWithoutArguments = taskService.create.bind(taskService);
+      try {
+        await callWithoutArguments();
+      } catch (error) {
+        error = error as Error;
+        expect(error.name).toEqual('ValidationError');
+        expect(error.errors).not.toBeNull();
+        expect(error.errors.title).not.toBeNull();
+      }
     });
   });
 });

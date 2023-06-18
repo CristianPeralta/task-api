@@ -47,6 +47,18 @@ describe('Task Service', () => {
       expect(tasks.length).toBe(0);
     });
 
+    it('should not create Task without arguments', async () => {
+      const callWithoutArguments = taskService.create.bind(taskService);
+      try {
+        await callWithoutArguments();
+      } catch (error) {
+        error = error as Error;
+        expect(error.name).toEqual('ValidationError');
+        expect(error.errors).not.toBeNull();
+        expect(error.errors.title).not.toBeNull();
+      }
+    });
+
     it('should not create Task with falsy params', async () => {
       expect.assertions(3);
       try {
@@ -60,23 +72,25 @@ describe('Task Service', () => {
     });
 
     it('should not create Task without title', async () => {
-      expect(
-        taskService.create({
-          description: 'sample description',
-        } as CreateTaskDto),
-      ).rejects.toThrowError();
-    });
-
-    it('should not create Task without arguments', async () => {
-      const callWithoutArguments = taskService.create.bind(taskService);
       try {
-        await callWithoutArguments();
+        await taskService.create({
+          description: 'sample description',
+        } as CreateTaskDto);
       } catch (error) {
         error = error as Error;
         expect(error.name).toEqual('ValidationError');
         expect(error.errors).not.toBeNull();
         expect(error.errors.title).not.toBeNull();
+        expect(error.errors.title.message).toEqual('Path `title` is required.');
       }
+    });
+
+    it('should create Task with only a title', async () => {
+      const task = await taskService.create({
+        title: 'sample title',
+      });
+      expect(task.title).toEqual('sample title');
+      expect(task.done).toEqual(false); // default value
     });
   });
 });

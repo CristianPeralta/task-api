@@ -42,66 +42,95 @@ describe('Task Service', () => {
   });
 
   describe('Tasks Service', () => {
-    it('should list Tasks', async () => {
-      const tasks = await taskService.findAll();
-      expect(tasks.length).toBe(0);
-    });
+    describe('create', () => {
+      it('should not create Task without arguments', async () => {
+        const callWithoutArguments = taskService.create.bind(taskService);
+        try {
+          await callWithoutArguments();
+        } catch (error) {
+          error = error as Error;
+          expect(error.name).toEqual('ValidationError');
+          expect(error.errors).not.toBeNull();
+          expect(error.errors.title).not.toBeNull();
+        }
+      });
 
-    it('should not create Task without arguments', async () => {
-      const callWithoutArguments = taskService.create.bind(taskService);
-      try {
-        await callWithoutArguments();
-      } catch (error) {
-        error = error as Error;
-        expect(error.name).toEqual('ValidationError');
-        expect(error.errors).not.toBeNull();
-        expect(error.errors.title).not.toBeNull();
-      }
-    });
+      it('should not create Task with falsy params', async () => {
+        expect.assertions(3);
+        try {
+          await taskService.create(null);
+        } catch (error) {
+          error = error as Error;
+          expect(error.name).toEqual('ValidationError');
+          expect(error.errors).not.toBeNull();
+          expect(error.errors.title).not.toBeNull();
+        }
+      });
 
-    it('should not create Task with falsy params', async () => {
-      expect.assertions(3);
-      try {
-        await taskService.create(null);
-      } catch (error) {
-        error = error as Error;
-        expect(error.name).toEqual('ValidationError');
-        expect(error.errors).not.toBeNull();
-        expect(error.errors.title).not.toBeNull();
-      }
-    });
+      it('should not create Task without title', async () => {
+        try {
+          await taskService.create({
+            description: 'sample description',
+          } as CreateTaskDto);
+        } catch (error) {
+          error = error as Error;
+          expect(error.name).toEqual('ValidationError');
+          expect(error.errors).not.toBeNull();
+          expect(error.errors.title).not.toBeNull();
+          expect(error.errors.title.message).toEqual(
+            'Path `title` is required.',
+          );
+        }
+      });
 
-    it('should not create Task without title', async () => {
-      try {
-        await taskService.create({
+      it('should create Task with only a title', async () => {
+        const task = await taskService.create({
+          title: 'sample title',
+        });
+        expect(task.title).toEqual('sample title');
+        expect(task.done).toEqual(false); // default value
+      });
+
+      it('should create Task with title, description and done properties', async () => {
+        const task = await taskService.create({
+          title: 'sample title',
           description: 'sample description',
-        } as CreateTaskDto);
-      } catch (error) {
-        error = error as Error;
-        expect(error.name).toEqual('ValidationError');
-        expect(error.errors).not.toBeNull();
-        expect(error.errors.title).not.toBeNull();
-        expect(error.errors.title.message).toEqual('Path `title` is required.');
-      }
+          done: true,
+        });
+        expect(task.title).toEqual('sample title');
+        expect(task.description).toEqual('sample description');
+        expect(task.done).toEqual(true);
+      });
     });
 
-    it('should create Task with only a title', async () => {
-      const task = await taskService.create({
-        title: 'sample title',
+    describe('findOne', () => {
+      it('should get a Task by ID', async () => {
+        const task = await taskService.create({
+          title: 'sample title',
+        });
+        const createdTask = await taskService.findOne(String(task._id));
+        expect(createdTask).toBeDefined();
+        expect(createdTask).not.toBeNull();
+        expect(createdTask._id).toEqual(task._id);
+        expect(task.title).toEqual('sample title');
       });
-      expect(task.title).toEqual('sample title');
-      expect(task.done).toEqual(false); // default value
+
+      it('should return empty result for non-existing ID', async () => {
+        const nonExistingId = new mongoose.Types.ObjectId().toHexString();
+        const result = await taskService.findOne(String(nonExistingId));
+        expect(result).toBeNull();
+      });
     });
 
-    it('should create Task with title, description and done properties', async () => {
-      const task = await taskService.create({
-        title: 'sample title',
-        description: 'sample description',
-        done: true,
+    describe('findAll', () => {
+      it('should return an empty array when no tasks exist', async () => {
+        const tasks = await taskService.findAll();
+        expect(tasks.length).toBe(0);
       });
-      expect(task.title).toEqual('sample title');
-      expect(task.description).toEqual('sample description');
-      expect(task.done).toEqual(true);
     });
+
+    // describe('update', () => {});
+
+    // describe('delete', () => {});
   });
 });

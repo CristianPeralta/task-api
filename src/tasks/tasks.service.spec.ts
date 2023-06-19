@@ -92,5 +92,16 @@ describe('Task Service', () => {
       expect(task.title).toEqual('sample title');
       expect(task.done).toEqual(false); // default value
     });
+
+    it('should create Task with title, description and done properties', async () => {
+      const task = await taskService.create({
+        title: 'sample title',
+        description: 'sample description',
+        done: true,
+      });
+      expect(task.title).toEqual('sample title');
+      expect(task.description).toEqual('sample description');
+      expect(task.done).toEqual(true);
+    });
   });
 });

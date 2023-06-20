@@ -125,7 +125,22 @@ describe('Task Service', () => {
     describe('findAll', () => {
       it('should return an empty array when no tasks exist', async () => {
         const tasks = await taskService.findAll();
+        expect(tasks).not.toBeNull();
+        expect(tasks).toBeInstanceOf(Array);
         expect(tasks.length).toBe(0);
+      });
+      it('should get all tasks', async () => {
+        await Promise.all(
+          ['title 1', 'title 2', 'title 3'].map((t) =>
+            taskService.create({
+              title: t,
+            }),
+          ),
+        );
+        const tasks = await taskService.findAll();
+        expect(tasks).not.toBeNull();
+        expect(tasks).toBeInstanceOf(Array);
+        expect(tasks.length).toBe(3);
       });
     });
 

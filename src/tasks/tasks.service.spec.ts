@@ -188,6 +188,26 @@ describe('Task Service', () => {
       });
     });
 
-    // describe('delete', () => {});
+    describe('delete', () => {
+      it('should delete a Task', async () => {
+        const task = await taskService.create({
+          title: 'sample title',
+        });
+
+        const deletedTask = await taskService.delete(String(task._id));
+        expect(deletedTask).toBeDefined();
+        expect(deletedTask._id).toBeDefined();
+        expect(deletedTask._id).toStrictEqual(task._id);
+
+        const result = await taskService.findOne(String(deletedTask._id));
+        expect(result).toBeNull();
+      });
+
+      it('should return null for non-existing ID', async () => {
+        const nonExistingId = new mongoose.Types.ObjectId().toHexString();
+        const result = await taskService.delete(String(nonExistingId));
+        expect(result).toBeNull();
+      });
+    });
   });
 });

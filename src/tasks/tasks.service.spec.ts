@@ -87,6 +87,8 @@ describe('Task Service', () => {
         const task = await taskService.create({
           title: 'sample title',
         });
+        expect(task).toBeDefined();
+        expect(task._id).toBeDefined();
         expect(task.title).toEqual('sample title');
         expect(task.done).toEqual(false); // default value
       });
@@ -97,6 +99,8 @@ describe('Task Service', () => {
           description: 'sample description',
           done: true,
         });
+        expect(task).toBeDefined();
+        expect(task._id).toBeDefined();
         expect(task.title).toEqual('sample title');
         expect(task.description).toEqual('sample description');
         expect(task.done).toEqual(true);
@@ -111,11 +115,12 @@ describe('Task Service', () => {
         const createdTask = await taskService.findOne(String(task._id));
         expect(createdTask).toBeDefined();
         expect(createdTask).not.toBeNull();
+        expect(createdTask._id).toBeDefined();
         expect(createdTask._id).toStrictEqual(task._id);
         expect(task.title).toEqual('sample title');
       });
 
-      it('should return empty result for non-existing ID', async () => {
+      it('should return null for non-existing ID', async () => {
         const nonExistingId = new mongoose.Types.ObjectId().toHexString();
         const result = await taskService.findOne(String(nonExistingId));
         expect(result).toBeNull();
@@ -125,10 +130,11 @@ describe('Task Service', () => {
     describe('findAll', () => {
       it('should return an empty array when no tasks exist', async () => {
         const tasks = await taskService.findAll();
-        expect(tasks).not.toBeNull();
+        expect(tasks).toBeDefined();
         expect(tasks).toBeInstanceOf(Array);
         expect(tasks.length).toBe(0);
       });
+
       it('should get all tasks', async () => {
         await Promise.all(
           ['title 1', 'title 2', 'title 3'].map((t) =>
@@ -138,6 +144,7 @@ describe('Task Service', () => {
           ),
         );
         const tasks = await taskService.findAll();
+        expect(tasks).toBeDefined();
         expect(tasks).not.toBeNull();
         expect(tasks).toBeInstanceOf(Array);
         expect(tasks.length).toBe(3);
@@ -166,22 +173,18 @@ describe('Task Service', () => {
         expect(updatedTask.done).toBe(taskUpdates.done);
       });
 
-      it('should return an error for non-existing ID', async () => {
+      it('should return null for non-existing ID', async () => {
         const taskUpdates = {
           title: 'updated title',
           description: 'updated description',
           done: true,
         };
         const nonExistingId = new mongoose.Types.ObjectId().toHexString();
-        try {
-          await taskService.update(String(nonExistingId), taskUpdates);
-        } catch (error) {
-          error = error as Error;
-          console.log(error);
-          expect(error.name).toEqual('ValidationError');
-          expect(error.errors).not.toBeNull();
-          expect(error.errors.title).not.toBeNull();
-        }
+        const updatedTask = await taskService.update(
+          String(nonExistingId),
+          taskUpdates,
+        );
+        expect(updatedTask).toBeNull();
       });
     });
 

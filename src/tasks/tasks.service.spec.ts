@@ -111,7 +111,7 @@ describe('Task Service', () => {
         const createdTask = await taskService.findOne(String(task._id));
         expect(createdTask).toBeDefined();
         expect(createdTask).not.toBeNull();
-        expect(createdTask._id).toEqual(task._id);
+        expect(createdTask._id).toStrictEqual(task._id);
         expect(task.title).toEqual('sample title');
       });
 
@@ -144,7 +144,46 @@ describe('Task Service', () => {
       });
     });
 
-    // describe('update', () => {});
+    describe('update', () => {
+      it('should update a Task', async () => {
+        const task = await taskService.create({
+          title: 'sample title',
+        });
+        const taskUpdates = {
+          title: 'updated title',
+          description: 'updated description',
+          done: true,
+        };
+        const updatedTask = await taskService.update(
+          String(task._id),
+          taskUpdates,
+        );
+        expect(updatedTask).toBeDefined();
+        expect(updatedTask._id).toBeDefined();
+        expect(updatedTask._id).toStrictEqual(task._id);
+        expect(updatedTask.title).toBe(taskUpdates.title);
+        expect(updatedTask.description).toBe(taskUpdates.description);
+        expect(updatedTask.done).toBe(taskUpdates.done);
+      });
+
+      it('should return an error for non-existing ID', async () => {
+        const taskUpdates = {
+          title: 'updated title',
+          description: 'updated description',
+          done: true,
+        };
+        const nonExistingId = new mongoose.Types.ObjectId().toHexString();
+        try {
+          await taskService.update(String(nonExistingId), taskUpdates);
+        } catch (error) {
+          error = error as Error;
+          console.log(error);
+          expect(error.name).toEqual('ValidationError');
+          expect(error.errors).not.toBeNull();
+          expect(error.errors.title).not.toBeNull();
+        }
+      });
+    });
 
     // describe('delete', () => {});
   });

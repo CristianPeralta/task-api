@@ -96,11 +96,53 @@ describe('Task Service', () => {
     });
 
     describe('findAll', () => {
-      // ...
+      it('should return an array of tasks', async () => {
+        const tasks = [
+          { _id: '1', title: 'Task 1', done: false },
+          {
+            _id: '2',
+            title: 'Task 2',
+            description: 'Some description 2',
+            done: true,
+          },
+        ];
+        jest.spyOn(tasksService, 'findAll').mockResolvedValue(tasks as any);
+
+        const result = await tasksController.findAll();
+
+        expect(result).toEqual(tasks);
+        expect(tasksService.findAll).toHaveBeenCalled();
+      });
     });
 
     describe('delete', () => {
-      // ...
+      it('should delete a task and return it', async () => {
+        const taskId = 'task-id';
+        const deletedTask = { _id: taskId, title: 'Sample Task', done: false };
+
+        jest
+          .spyOn(tasksService, 'delete')
+          .mockResolvedValue(deletedTask as any);
+
+        const result = await tasksController.delete(taskId);
+
+        expect(tasksService.delete).toHaveBeenCalledWith(taskId);
+        expect(result).toBe(deletedTask);
+      });
+
+      it('should throw NotFoundException for non-existing task', async () => {
+        const taskId = 'non-existing-task-id';
+
+        jest.spyOn(tasksService, 'delete').mockResolvedValue(null);
+
+        try {
+          await tasksController.delete(taskId);
+        } catch (error) {
+          expect(tasksService.delete).toHaveBeenCalledWith(taskId);
+          expect(error).toBeInstanceOf(NotFoundException);
+          expect(error.message).toBe('Task does not exist');
+        }
+      });
     });
 
     describe('update', () => {

@@ -5,6 +5,7 @@ import { TasksService } from './tasks.service';
 import { Task } from '../schemas/task.schema';
 import { getModelToken } from '@nestjs/mongoose';
 import { CreateTaskDto } from '../dto/create-task.dto';
+import { UpdateTaskDto } from '../dto/update-task.dto';
 
 describe('Task Service', () => {
   let tasksController: TasksController;
@@ -117,7 +118,7 @@ describe('Task Service', () => {
 
     describe('delete', () => {
       it('should delete a task and return it', async () => {
-        const taskId = 'task-id';
+        const taskId = '1';
         const deletedTask = { _id: taskId, title: 'Sample Task', done: false };
 
         jest
@@ -146,7 +147,31 @@ describe('Task Service', () => {
     });
 
     describe('update', () => {
-      // ...
+      it('should update a task by ID', async () => {
+        const taskId = '1';
+        const updateDto: UpdateTaskDto = { title: 'Updated Task', done: true };
+        const updatedTask = { _id: taskId, title: 'Updated Task', done: true };
+
+        jest
+          .spyOn(tasksService, 'update')
+          .mockResolvedValue(updatedTask as any);
+
+        const result = await tasksController.update(taskId, updateDto);
+
+        expect(tasksService.update).toHaveBeenCalledWith(taskId, updateDto);
+        expect(result).toEqual(updatedTask);
+      });
+
+      it('should throw NotFoundException for non-existing ID', async () => {
+        const nonExistingId = 'non-existing-id';
+        const updateDto: UpdateTaskDto = { title: 'Updated Task', done: true };
+
+        jest.spyOn(tasksService, 'update').mockResolvedValue(null);
+
+        await expect(
+          tasksController.update(nonExistingId, updateDto),
+        ).rejects.toThrow(NotFoundException);
+      });
     });
   });
 });

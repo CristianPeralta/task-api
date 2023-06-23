@@ -1,4 +1,4 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
@@ -73,7 +73,26 @@ describe('Task Service', () => {
     });
 
     describe('findOne', () => {
-      // ...
+      it('should return a task when a valid ID is provided', async () => {
+        const taskId = '1';
+        const task = { _id: taskId, title: 'Task 1', done: false };
+        jest.spyOn(tasksService, 'findOne').mockResolvedValue(task as any);
+
+        const result = await tasksController.findOne(taskId);
+
+        expect(result).toEqual(task);
+        expect(tasksService.findOne).toHaveBeenCalledWith(taskId);
+      });
+
+      it('should throw NotFoundException when an invalid ID is provided', async () => {
+        const invalidTaskId = '999';
+        jest.spyOn(tasksService, 'findOne').mockResolvedValue(null);
+
+        await expect(tasksController.findOne(invalidTaskId)).rejects.toThrow(
+          NotFoundException,
+        );
+        expect(tasksService.findOne).toHaveBeenCalledWith(invalidTaskId);
+      });
     });
 
     describe('findAll', () => {

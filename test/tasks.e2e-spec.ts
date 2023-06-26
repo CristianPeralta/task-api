@@ -1,23 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 
-describe('AppController (e2e)', () => {
+describe('TasksController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-        MongooseModule.forRoot('mongodb://localhost/tasks/test', {
-          useCreateIndex: true,
-          useNewUrlParser: true,
-          useUnifiedTopology: true,
-        }),
-      ],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();

@@ -9,7 +9,6 @@ import mongoose from 'mongoose';
 describe('TasksController (e2e)', () => {
   let app: INestApplication;
   let mongooseConnection: mongoose.Connection;
-  let createdTasksId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -31,6 +30,25 @@ describe('TasksController (e2e)', () => {
     await app.close();
   });
 
+  beforeEach(async () => {
+    await mongooseConnection.collection('tasks').deleteMany({});
+  });
+
+  const createTaskDto = {
+    title: 'New Task',
+  };
+
+  const updateTaskDto = {
+    title: 'Updated Task',
+    done: true,
+  };
+
+  const createNewTask = () =>
+    request(app.getHttpServer()).post('/tasks').send(createTaskDto);
+
+  const nonExistentTaskIdGenerated = () =>
+    new mongoose.Types.ObjectId().toHexString();
+
   describe('/tasks (GET)', () => {
     it('should return an array of tasks', () => {
       return request(app.getHttpServer())
@@ -43,32 +61,20 @@ describe('TasksController (e2e)', () => {
   });
 
   describe('POST /tasks', () => {
-    it('should create a new task', () => {
-      const createTaskDto = {
-        title: 'New Task',
-      };
-
-      return request(app.getHttpServer())
-        .post('/tasks')
-        .send(createTaskDto)
+    it('should create a new task', async () => {
+      await createNewTask()
         .expect(HttpStatus.CREATED)
         .then((response) => {
           const createdTask = response.body;
-          expect(response.body.title).toBeDefined();
-          createdTasksId = response.body._id;
+          expect(response.body._id).toBeDefined();
           expect(createdTask.title).toBe(createTaskDto.title);
           expect(createdTask.done).toBe(false);
         });
     });
 
-    it('should return ConflictException if task already exists', () => {
-      const createTaskDto = {
-        title: 'New Task', // Existing Task
-      };
-
-      return request(app.getHttpServer())
-        .post('/tasks')
-        .send(createTaskDto)
+    it('should return ConflictException if task already exists', async () => {
+      await createNewTask();
+      await createNewTask() // Existing Task
         .expect(HttpStatus.CONFLICT)
         .expect((response) => {
           expect(response.body.message).toBeDefined();
@@ -80,19 +86,19 @@ describe('TasksController (e2e)', () => {
 
   describe('/tasks/:id (GET)', () => {
     it('should return a task if it exists', async () => {
-      const taskId = createdTasksId;
+      const createdTaskResponse = await createNewTask();
+      const taskId = createdTaskResponse.body._id;
 
       const response = await request(app.getHttpServer())
         .get(`/tasks/${taskId}`)
         .expect(HttpStatus.OK);
 
-      const task = response.body;
-      expect(task).toBeDefined();
-      expect(task._id).toBe(taskId);
+      expect(response.body._id).toBeDefined();
+      expect(response.body._id).toBe(taskId);
     });
 
     it('should return 404 if the task does not exist', async () => {
-      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
+      const nonExistentTaskId = nonExistentTaskIdGenerated();
 
       await request(app.getHttpServer())
         .get(`/tasks/${nonExistentTaskId}`)
@@ -107,11 +113,8 @@ describe('TasksController (e2e)', () => {
 
   describe('/tasks/:id (PUT)', () => {
     it('should update a task successfully', async () => {
-      const taskId = createdTasksId;
-      const updateTaskDto = {
-        title: 'Updated Task',
-        done: true,
-      };
+      const createdTaskResponse = await createNewTask();
+      const taskId = createdTaskResponse.body._id;
 
       const response = await request(app.getHttpServer())
         .put(`/tasks/${taskId}`)
@@ -123,11 +126,7 @@ describe('TasksController (e2e)', () => {
     });
 
     it('should return 404 if task does not exist', async () => {
-      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
-      const updateTaskDto = {
-        title: 'Updated Task',
-        done: true,
-      };
+      const nonExistentTaskId = nonExistentTaskIdGenerated();
 
       const response = await request(app.getHttpServer())
         .put(`/tasks/${nonExistentTaskId}`)
@@ -140,7 +139,8 @@ describe('TasksController (e2e)', () => {
 
   describe('DELETE /tasks/:id', () => {
     it('should delete a task and return 204 status code', async () => {
-      const taskId = createdTasksId;
+      const createdTaskResponse = await createNewTask();
+      const taskId = createdTaskResponse.body._id;
 
       await request(app.getHttpServer())
         .delete(`/tasks/${taskId}`)
@@ -152,7 +152,7 @@ describe('TasksController (e2e)', () => {
     });
 
     it('should return 404 status code when trying to delete a non-existent task', async () => {
-      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
+      const nonExistentTaskId = nonExistentTaskIdGenerated();
 
       const response = await request(app.getHttpServer())
         .delete(`/tasks/${nonExistentTaskId}`)

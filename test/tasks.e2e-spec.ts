@@ -137,4 +137,28 @@ describe('TasksController (e2e)', () => {
       expect(response.body.message).toBe('Task does not exist');
     });
   });
+
+  describe('DELETE /tasks/:id', () => {
+    it('should delete a task and return 204 status code', async () => {
+      const taskId = createdTasksId;
+
+      await request(app.getHttpServer())
+        .delete(`/tasks/${taskId}`)
+        .expect(HttpStatus.NO_CONTENT);
+
+      await request(app.getHttpServer())
+        .get(`/tasks/${taskId}`)
+        .expect(HttpStatus.NOT_FOUND);
+    });
+
+    it('should return 404 status code when trying to delete a non-existent task', async () => {
+      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
+
+      const response = await request(app.getHttpServer())
+        .delete(`/tasks/${nonExistentTaskId}`)
+        .expect(HttpStatus.NOT_FOUND);
+
+      expect(response.body.message).toBe('Task does not exist');
+    });
+  });
 });

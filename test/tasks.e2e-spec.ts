@@ -2,13 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import { AppModule } from './../src/app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { MongooseModule, getConnectionToken } from '@nestjs/mongoose';
+import { getConnectionToken } from '@nestjs/mongoose';
 import * as request from 'supertest';
 import mongoose from 'mongoose';
 
 describe('TasksController (e2e)', () => {
   let app: INestApplication;
   let mongooseConnection: mongoose.Connection;
+  let createdTasksId: string;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -54,6 +55,7 @@ describe('TasksController (e2e)', () => {
         .then((response) => {
           const createdTask = response.body;
           expect(response.body.title).toBeDefined();
+          createdTasksId = response.body._id;
           expect(createdTask.title).toBe(createTaskDto.title);
         });
     });
@@ -71,6 +73,33 @@ describe('TasksController (e2e)', () => {
           expect(response.body.message).toBeDefined();
           const errorMessage = response.body.message;
           expect(errorMessage).toBe('Task already exists');
+        });
+    });
+  });
+
+  describe('/tasks/:id (GET)', () => {
+    it('should return a task if it exists', async () => {
+      const taskId = createdTasksId;
+
+      const response = await request(app.getHttpServer())
+        .get(`/tasks/${taskId}`)
+        .expect(HttpStatus.OK);
+
+      const task = response.body;
+      expect(task).toBeDefined();
+      expect(task._id).toBe(taskId);
+    });
+
+    it('should return 404 if the task does not exist', async () => {
+      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
+
+      await request(app.getHttpServer())
+        .get(`/tasks/${nonExistentTaskId}`)
+        .expect(HttpStatus.NOT_FOUND)
+        .expect((response) => {
+          expect(response.body.message).toBeDefined();
+          const errorMessage = response.body.message;
+          expect(errorMessage).toBe('Task does not exist');
         });
     });
   });

@@ -57,6 +57,7 @@ describe('TasksController (e2e)', () => {
           expect(response.body.title).toBeDefined();
           createdTasksId = response.body._id;
           expect(createdTask.title).toBe(createTaskDto.title);
+          expect(createdTask.done).toBe(false);
         });
     });
 
@@ -101,6 +102,39 @@ describe('TasksController (e2e)', () => {
           const errorMessage = response.body.message;
           expect(errorMessage).toBe('Task does not exist');
         });
+    });
+  });
+
+  describe('/tasks/:id (PUT)', () => {
+    it('should update a task successfully', async () => {
+      const taskId = createdTasksId;
+      const updateTaskDto = {
+        title: 'Updated Task',
+        done: true,
+      };
+
+      const response = await request(app.getHttpServer())
+        .put(`/tasks/${taskId}`)
+        .send(updateTaskDto)
+        .expect(HttpStatus.OK);
+
+      expect(response.body.title).toBe(updateTaskDto.title);
+      expect(response.body.done).toBe(updateTaskDto.done);
+    });
+
+    it('should return 404 if task does not exist', async () => {
+      const nonExistentTaskId = new mongoose.Types.ObjectId().toHexString();
+      const updateTaskDto = {
+        title: 'Updated Task',
+        done: true,
+      };
+
+      const response = await request(app.getHttpServer())
+        .put(`/tasks/${nonExistentTaskId}`)
+        .send(updateTaskDto)
+        .expect(HttpStatus.NOT_FOUND);
+
+      expect(response.body.message).toBe('Task does not exist');
     });
   });
 });

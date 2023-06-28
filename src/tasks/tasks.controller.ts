@@ -14,7 +14,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
-import { Task } from 'src/schemas/task.schema';
+import { Task } from '../schemas/task.schema';
 
 @ApiTags('Tasks')
 @Controller('tasks')

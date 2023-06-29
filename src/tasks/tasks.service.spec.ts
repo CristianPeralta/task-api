@@ -1,3 +1,12 @@
+/**
+ * Test suite: Task Service
+ *
+ * Description:
+ * This test suite contains unit tests for the methods of the TasksService class.
+ * It verifies the behavior of the create(), findOne(), findAll(), update(), and delete()
+ * methods when working with tasks.
+ */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { Task, TaskSchema } from '../schemas/task.schema';

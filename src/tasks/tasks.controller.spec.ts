@@ -1,3 +1,12 @@
+/**
+ * Test suite: Task Controller
+ *
+ * Description:
+ * This test suite contains unit tests for the methods of the TasksController class.
+ * It verifies the behavior of the create(), findOne(), findAll(), update(), and delete()
+ * methods when handling requests related to tasks.
+ */
+
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
@@ -7,7 +16,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 
-describe('Task Service', () => {
+describe('Task Controller', () => {
   let tasksController: TasksController;
   let tasksService: TasksService;
 

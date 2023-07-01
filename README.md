@@ -1,73 +1,185 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Tasks API  
+### Description 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This API provides CRUD (Create, Read, Update, Delete) operations for managing tasks. 
 
-## Description
+### Installation 
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Run the following command to install the dependencies: ```bash npm install
 
-## Installation
+### Configuration
+
+1.  Copy the `.env.example` file as `.env` and configure the necessary environment variables.
+2.  If you want to run tests, also copy the `.env.example` file as `.env.test` and configure the necessary environment variables for testing.
+
+### Execution
+
+To run the API, use the following command:
 
 ```bash
-$ npm install
-```
+	npm install
+ ```
 
-## Running the app
+### Tests
 
-```bash
-# development
-$ npm run start
+Unit tests and e2e tests are included to ensure the proper functioning of the API.
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
+-   To run unit tests, use the following command:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+	npm run test
 ```
 
-## Support
+-   To run e2e tests, use the following command:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+	npm run test:e2e
+```
 
-## Stay in touch
+### Technologies Used
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+-   Node.js: v19.8.1
+-   MongoDB: v6.0.4
 
-## License
+### Model
 
-Nest is [MIT licensed](LICENSE).
+The data model used in the API is as follows:
+
+**Task Schema:**
+
+| Property      | Type         |
+|--|--|
+| _id  | *string*       |
+| title        | *string*      | 
+| description  | *string*      |
+| done         | *boolean*     | 
+| createdAt    | *string*      |
+| updatedAt    | *string*      |
+| __v          | *number*      |
+
+### Helper Schemas
+**CreateTaskDto Schema**
+| Property | Type |
+ | ------------ | ------- | 
+ | title | *string* |
+ | description | *string* | 
+ | done | *boolean* |
+
+**UpdateTaskDto Schema**
+| Property | Type | 
+| ------------ | ------- | 
+| title | *string* | 
+| description | *string* |
+| done | *boolean* |
+
+### Endpoints
+
+| Endpoint | Method | Description | Responses | 
+| ------------- | ------ | -------------------- | ----------------------------------------- | 
+| `/tasks` | GET | Get all tasks | 200 (OK), 404 (Not Found) | 
+| `/tasks` | POST | Create a new task | 201 (Created), 409 (Conflict) | 
+| `/tasks/{id}` | GET | Get a task by ID | 200 (OK), 404 (Not Found) | 
+| `/tasks/{id}` | DELETE | Delete a task by ID | 204 (No Content), 404 (Not Found) | 
+| `/tasks/{id}` | PUT | Update a task by ID | 200 (OK), 404 (Not Found) |
+
+**Request Body:**
+1. **POST /tasks**
+
+	-   Description: Creates a new task.
+	-   Content:
+	    -   `application/json`:
+	        -   Schema: [CreateTaskDto](#Model)
+
+		Example Request Body (POST /tasks):
+		```json 
+		{
+			"title":  "Task Title",
+			"description":  "Task Description",
+			"done":  true
+		}
+		```
+		
+2. **PUT /tasks:**
+	- Description: Updates an existing task.
+	-   Content:
+	    -   `application/json`:
+	        -   Schema: [UpdateTaskDto](https://chat.openai.com/c/9a6b94d5-3d2f-4e9a-a0d3-ee9bc2959a90#updateTaskDto-schema)
+
+		Example Request Body (PUT /tasks):
+		```json 
+		{
+			"title":  "Task Title",
+			"description":  "Task Description",
+			"done":  true
+		}
+		```
+
+**Possible Responses:**
+
+1. **200 (OK)**  
+	- Description: The request was successful. 
+	- Content: 
+		- `application/json`: 
+			- Schema: [Task Schema](#task-schema) 
+
+		Example Response **(GET /tasks):** 
+		```json 
+		[
+			{ 
+				"_id": "60eef305d1e513001e477f20", 
+				"title": "Task Title", 
+				"description": "Task Description", 
+				"done": false, 
+				"createdAt": "2021-07-14T10:30:00Z", 
+				"updatedAt": "2021-07-14T10:45:00Z", 
+				"__v": "0"
+			}
+		]
+		```
+
+		Example Response **(GET /tasks/{id):** 
+		```json 
+		{ 
+			"_id": "60eef305d1e513001e477f20", 
+			"title": "Task Title", 
+			"description": "Task Description", 
+			"done": false, 
+			"createdAt": "2021-07-14T10:30:00Z", 
+			"updatedAt": "2021-07-14T10:45:00Z", 
+			"__v": "0"
+		}
+		```
+	
+3.  **201 (Created)**
+    
+    -   Description: The task was created successfully.
+    -   Content:
+        -   `application/json`:
+            -   Schema: [Task Schema](https://chat.openai.com/c/9a6b94d5-3d2f-4e9a-a0d3-ee9bc2959a90#task-schema)
+
+		   Example Response **(POST /tasks):**
+	    
+	    ```json
+	    {
+			"_id": "60eef305d1e513001e477f20"
+			"title": "Task Title",
+			"description": "Task Description",
+			"done": true,
+			"createdAt": "2021-07-14T10:30:00Z",
+			"updatedAt": "2021-07-14T10:45:00Z",
+			"__v": "0"
+	    }
+	    ```
+4.  **204 (No Content)**
+    
+    -   Description: The task was deleted successfully.
+5.  **404 (Not Found)**
+    
+    -   Description: The requested task was not found.
+6.  **409 (Conflict)**
+    
+    -   Description: The task already exists
+## Autor 
+-   Name: Cristian Peralta
+-   GitHub: [CristianPeralta](https://github.com/CristianPeralta)

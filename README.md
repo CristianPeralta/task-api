@@ -1,95 +1,108 @@
+<div align="center">
+   <h1>Tasks API </h1>
+  <img src="https://img.shields.io/badge/-NestJS-blueviolet" alt="NestJS">
+  <img src="https://img.shields.io/badge/-MongoDB-green" alt="MongoDB">
+  <img src="https://img.shields.io/badge/-RESTful_API-blue" alt="RESTful API">
+  <img src="https://img.shields.io/badge/-CRUD_Operations-green" alt="CRUD Operations">
+  <img src="https://img.shields.io/badge/-Swagger-red" alt="Swagger">
+  <img src="https://img.shields.io/badge/-Unit_Testing-yellow" alt="Unit Testing">
+  <img src="https://img.shields.io/badge/-E2E_Testing-purple" alt="E2E Testing">
+</div>
 
-## Tasks API  
-### Description 
+## 1. Description 
 
 This API provides CRUD (Create, Read, Update, Delete) operations for managing tasks. 
 
-### Installation 
+## 2. Installation 
 
-Run the following command to install the dependencies: ```bash npm install
+Run the following command to install the dependencies: 
+```bash
+npm install
+```
 
-### Configuration
+## 3. Configuration
 
 1.  Copy the `.env.example` file as `.env` and configure the necessary environment variables.
 2.  If you want to run tests, also copy the `.env.example` file as `.env.test` and configure the necessary environment variables for testing.
 
-### Execution
+## 4. Execution
 
 To run the API, use the following command:
 
 ```bash
-	npm install
+npm install
  ```
 
-### Tests
+## 5. Tests
 
 Unit tests and e2e tests are included to ensure the proper functioning of the API.
 
 -   To run unit tests, use the following command:
 
 ```bash
-	npm run test
+npm run test
 ```
 
 -   To run e2e tests, use the following command:
 
 ```bash
-	npm run test:e2e
+npm run test:e2e
 ```
 
-### Technologies Used
+## 6. Technologies Used
 
 -   Node.js: v19.8.1
 -   MongoDB: v6.0.4
 
-### Model
+## 7. Model
 
 The data model used in the API is as follows:
 
-**Task Schema:**
+### Task Schema
 
-| Property      | Type         |
-|--|--|
-| _id  | *string*       |
-| title        | *string*      | 
-| description  | *string*      |
-| done         | *boolean*     | 
-| createdAt    | *string*      |
-| updatedAt    | *string*      |
-| __v          | *number*      |
+| Property    | Type      | Required | Generated |
+|-------------|-----------|----------|-----------|
+| _id         | string    | Yes      | Yes       |
+| title       | string    | Yes      | No        |
+| description | string    | No       | No        |
+| done        | boolean   | No       | No        |
+| createdAt   | string    | No       | Yes       |
+| updatedAt   | string    | No       | Yes       |
+| __v         | number    | No       | Yes       |
 
-### Helper Schemas
-**CreateTaskDto Schema**
-| Property | Type |
- | ------------ | ------- | 
- | title | *string* |
- | description | *string* | 
- | done | *boolean* |
+## 8. Helper Schemas
+### CreateTaskDto Schema
+| Property    | Type    | Required |
+|-------------|---------|----------|
+| title       | string  | Yes      |
+| description | string  | No       |
+| done        | boolean | No       |
 
-**UpdateTaskDto Schema**
-| Property | Type | 
-| ------------ | ------- | 
-| title | *string* | 
-| description | *string* |
-| done | *boolean* |
+### UpdateTaskDto Schema
+| Property    | Type    | Required |
+|-------------|---------|----------|
+| title       | string  | No       |
+| description | string  | No       |
+| done        | boolean | No       |
 
-### Endpoints
+## 9. Endpoints
 
-| Endpoint | Method | Description | Responses | 
-| ------------- | ------ | -------------------- | ----------------------------------------- | 
-| `/tasks` | GET | Get all tasks | 200 (OK), 404 (Not Found) | 
-| `/tasks` | POST | Create a new task | 201 (Created), 409 (Conflict) | 
-| `/tasks/{id}` | GET | Get a task by ID | 200 (OK), 404 (Not Found) | 
-| `/tasks/{id}` | DELETE | Delete a task by ID | 204 (No Content), 404 (Not Found) | 
-| `/tasks/{id}` | PUT | Update a task by ID | 200 (OK), 404 (Not Found) |
+| Endpoint        | Method | Description         | Responses                            |
+|-----------------|--------|---------------------|--------------------------------------|
+| `/tasks`        | GET    | Get all tasks       | 200 (OK), 404 (Not Found)            |
+| `/tasks`        | POST   | Create a new task   | 201 (Created), 409 (Conflict)        |
+| `/tasks/{id}`   | GET    | Get a task by ID    | 200 (OK), 404 (Not Found)            |
+| `/tasks/{id}`   | DELETE | Delete a task by ID | 204 (No Content), 404 (Not Found)    |
+| `/tasks/{id}`   | PUT    | Update a task by ID | 200 (OK), 404 (Not Found)            |
 
-**Request Body:**
+## 10. Request and Response
+### **Request Body:**
 1. **POST /tasks**
 
 	-   Description: Creates a new task.
 	-   Content:
 	    -   `application/json`:
-	        -   Schema: [CreateTaskDto](#Model)
+	        -   Schema: [CreateTaskDto](#createtaskdto-schema)
 
 		Example Request Body (POST /tasks):
 		```json 
@@ -104,7 +117,7 @@ The data model used in the API is as follows:
 	- Description: Updates an existing task.
 	-   Content:
 	    -   `application/json`:
-	        -   Schema: [UpdateTaskDto](https://chat.openai.com/c/9a6b94d5-3d2f-4e9a-a0d3-ee9bc2959a90#updateTaskDto-schema)
+	        -   Schema: [UpdateTaskDto](#updatetaskdto-schema)
 
 		Example Request Body (PUT /tasks):
 		```json 
@@ -115,13 +128,13 @@ The data model used in the API is as follows:
 		}
 		```
 
-**Possible Responses:**
+### **Responses:**
 
 1. **200 (OK)**  
 	- Description: The request was successful. 
 	- Content: 
 		- `application/json`: 
-			- Schema: [Task Schema](#task-schema) 
+			- Schema: [Task](#task-schema) 
 
 		Example Response **(GET /tasks):** 
 		```json 
@@ -156,7 +169,7 @@ The data model used in the API is as follows:
     -   Description: The task was created successfully.
     -   Content:
         -   `application/json`:
-            -   Schema: [Task Schema](https://chat.openai.com/c/9a6b94d5-3d2f-4e9a-a0d3-ee9bc2959a90#task-schema)
+            -   Schema: [Task](#task-schema)
 
 		   Example Response **(POST /tasks):**
 	    
@@ -180,6 +193,3 @@ The data model used in the API is as follows:
 6.  **409 (Conflict)**
     
     -   Description: The task already exists
-## Autor 
--   Name: Cristian Peralta
--   GitHub: [CristianPeralta](https://github.com/CristianPeralta)

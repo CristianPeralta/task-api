@@ -5,10 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
+    // Global application configuration
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env', '.env.test'],
     }),
+    // MongoDB configuration and connection
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -16,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }),
+    // Tasks module
     TasksModule,
   ],
 })

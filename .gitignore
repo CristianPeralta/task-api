@@ -39,4 +39,4 @@ lerna-debug.log*
 .env.test
 
 # data
-data
+/data

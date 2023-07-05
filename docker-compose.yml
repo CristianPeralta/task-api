@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mongodb:
+    image: mongo:6.0.4-jammy
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./data:/data/db
+    environment:
+      - UID=${UID}
+      - GID=${GID}
+    user: '${UID}:${GID}'
+    networks:
+      - tasks-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongodb
+    env_file:
+      - .env
+    networks:
+      - tasks-network
+
+networks:
+  tasks-network:
+    driver: bridge

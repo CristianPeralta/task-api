@@ -13,27 +13,32 @@
 
 This API provides CRUD (Create, Read, Update, Delete) operations for managing tasks. 
 
-## 2. Installation 
+## 2. Technologies Used
+
+-   Node.js: v19.8.1
+-   MongoDB: v6.0.4
+
+## 3. Installation 
 
 Run the following command to install the dependencies: 
 ```bash
 npm install
 ```
 
-## 3. Configuration
+## 4. Configuration
 
 1.  Copy the `.env.example` file as `.env` and configure the necessary environment variables.
 2.  If you want to run tests, also copy the `.env.example` file as `.env.test` and configure the necessary environment variables for testing.
 
-## 4. Execution
+## 5. Execution
 
 To run the API, use the following command:
 
 ```bash
-npm install
+npm run start
  ```
 
-## 5. Tests
+## 6. Tests
 
 Unit tests and e2e tests are included to ensure the proper functioning of the API.
 
@@ -49,12 +54,58 @@ npm run test
 npm run test:e2e
 ```
 
-## 6. Technologies Used
+## 7. Docker
 
--   Node.js: v19.8.1
--   MongoDB: v6.0.4
+This documentation provides instructions on how to use Docker to build and run the Tasks API application. It covers building the Docker image, running the image with Docker, and using Docker Compose for more complex setups.
 
-## 7. Model
+### 7.1 Prerequisites
+
+Docker should be installed on your system. If you don't have Docker installed, please follow the [Docker installation guide](https://docs.docker.com/engine/install/).
+
+### 7.2 Building the Docker Image
+
+To build the Docker image for the Tasks API application, run the following command:
+```bash
+docker build -t tasks-api .
+```
+### 7.3 Running the Docker Container
+To run the Docker container with the Tasks API image, use the following command:
+
+```bash
+docker run -p 3000:3000 --network host tasks-api
+```
+Note: Using the --network host flag allows the container to consume the database from the host machine. If this is not available, consider using Docker Compose as described below.
+
+### 7.4 Running with Docker Compose
+If you prefer to use Docker Compose, follow these steps:
+
+Grant necessary permissions to the data directory for persistent storage:
+
+```bash
+sudo chmod -R 777 /data/db
+```
+Uncomment line 6 and comment line 4 in the .env file:
+
+```bash
+4. MONGODB_CONNECTION_STRING=mongodb://localhost/tasksdb
+5. # For docker compose
+6. # MONGODB_CONNECTION_STRING=mongodb://mongodb/tasksdb
+```
+(Optional) If you encounter permission issues or need to customize the UID and GID, uncomment lines 7 and 8 in the .env file:
+
+```bash
+7. # UID=1000
+8. # GID=1000
+```
+Ensure that port '27017:27017' is available on your system or modify the port in line 6 of the docker-compose.yml file.
+
+To run the Tasks API with Docker Compose, execute the following command:
+
+```bash
+docker compose up
+```
+
+## 8. Model
 
 The data model used in the API is as follows:
 
@@ -70,7 +121,7 @@ The data model used in the API is as follows:
 | updatedAt   | string    | No       | Yes       |
 | __v         | number    | No       | Yes       |
 
-## 8. Helper Schemas
+## 9. Helper Schemas
 ### CreateTaskDto Schema
 | Property    | Type    | Required |
 |-------------|---------|----------|
@@ -85,7 +136,7 @@ The data model used in the API is as follows:
 | description | string  | No       |
 | done        | boolean | No       |
 
-## 9. Endpoints
+## 10. Endpoints
 
 | Endpoint        | Method | Description         | Responses                            |
 |-----------------|--------|---------------------|--------------------------------------|
@@ -95,7 +146,7 @@ The data model used in the API is as follows:
 | `/tasks/{id}`   | DELETE | Delete a task by ID | 204 (No Content), 404 (Not Found)    |
 | `/tasks/{id}`   | PUT    | Update a task by ID | 200 (OK), 404 (Not Found)            |
 
-## 10. Request and Response
+## 11. Request and Response
 ### **Request Body:**
 1. **POST /tasks**
 

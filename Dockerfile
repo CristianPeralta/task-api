@@ -21,4 +21,4 @@ EXPOSE 3000
 EXPOSE 27017
 
 # Comando para iniciar la aplicación
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]

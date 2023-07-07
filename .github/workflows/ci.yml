@@ -34,9 +34,10 @@ jobs:
         # Executes the test command to run unit tests
 
       - name: Set up MongoDB
-        uses: mongo/setup-mongodb@v1
+        uses: docker/mongodb-github-action@v1
         with:
           mongodb-version: '6.0.4'
+          auth: 'false'
         # Set up MongoDB version 6.0.4
 
       - name: Run e2e tests

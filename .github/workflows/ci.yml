@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        # Checks out the code from the repository
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 19.8.1
+        # Sets up the Node.js environment with the specified version
+
+      - name: Install dependencies
+        run: npm install
+        # Installs project dependencies using npm
+
+      - name: Run tests
+        run: npm test
+        # Executes the test command to run tests

@@ -26,9 +26,19 @@ jobs:
         # Sets up the Node.js environment with the specified version
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         # Installs project dependencies using npm
 
-      - name: Run tests
-        run: npm test
-        # Executes the test command to run tests
+      - name: Run unit tests
+        run: npm run test
+        # Executes the test command to run unit tests
+
+      - name: Set up MongoDB
+        uses: mongo/setup-mongodb@v1
+        with:
+          mongodb-version: '6.0.4'
+        # Set up MongoDB version 6.0.4
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+        # Executes the test command to run e2e tests

@@ -54,7 +54,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        # Checks out the code from the repository
 
       - name: Set up Node.js
         uses: actions/setup-node@v2

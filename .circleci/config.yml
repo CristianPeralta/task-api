@@ -21,7 +21,7 @@ jobs:
   test:
     # Configuración del trabajo de pruebas
     docker:
-      - image: mongo:6.0.4-jammy
+      - image: node:20-alpine
     steps:
       - checkout
       - run:

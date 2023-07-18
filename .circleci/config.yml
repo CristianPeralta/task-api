@@ -23,7 +23,10 @@ jobs:
     docker:
       - image: node:20-alpine
     steps:
+    steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: npm
       - run:
           name: Run tests
           command: npm test

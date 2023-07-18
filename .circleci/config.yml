@@ -22,8 +22,14 @@ jobs:
     # Configuración del trabajo de pruebas
     docker:
       - image: node:20-alpine
+      - image: mongo:6.0.4-jammy
     steps:
       - checkout
+      - run:
+          name: Install Node.js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
       - node/install-packages:
           pkg-manager: npm
       - run:

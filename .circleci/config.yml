@@ -68,15 +68,15 @@ jobs:
 
       - run:
           name: Pull Vercel Environment Information
-          command: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+          command: vercel pull --yes --environment=production --token=${VERCEL_TOKEN}
 
       - run:
           name: Build Project Artifacts
-          command: vercel build --prod --token=$VERCEL_TOKEN
+          command: vercel build --prod --token=${VERCEL_TOKEN}
 
       - run:
           name: Deploy Project Artifacts to Vercel
-          command: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+          command: vercel deploy --prebuilt --prod --token=${VERCEL_TOKEN}
 
 workflows:
   # Below is the definition of your workflow.

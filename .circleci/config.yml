@@ -82,12 +82,12 @@ workflows:
   sample:
     jobs:
       - build:
-        filters:
-          branches:
-            only: main
-        events:
-          - pull
-          - push
+          filters:
+            branches:
+              only: main
+          events:
+            - pull
+            - push
       - test:
           requires:
             - build

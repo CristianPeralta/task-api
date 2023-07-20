@@ -85,23 +85,23 @@ workflows:
           filters:
             branches:
               only: main
-          events:
-            - pull
-            - push
+            events:
+              - pull
+              - push
       - test:
           requires:
             - build
           filters:
             branches:
               only: main
-          events:
-            - pull
-            - push
+            events:
+              - pull
+              - push
       - deploy-to-vercel:
           requires:
             - test
           filters:
             branches:
               only: main
-          events:
-            - push
+            events:
+              - push

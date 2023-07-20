@@ -55,10 +55,6 @@ jobs:
     # Build job configuration
     docker:
       - image: node:20-alpine
-    environment:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       # Checkout the code from the repository
       - checkout
@@ -68,15 +64,15 @@ jobs:
 
       - run:
           name: Pull Vercel Environment Information
-          command: vercel pull --yes --environment=production --token=VERCEL_TOKEN
+          command: vercel pull --yes --environment=production --token=$VERCEL_TOKEN
 
       - run:
           name: Build Project Artifacts
-          command: vercel build --prod --token=VERCEL_TOKEN
+          command: vercel build --prod --token=$VERCEL_TOKEN
 
       - run:
           name: Deploy Project Artifacts to Vercel
-          command: vercel deploy --prebuilt --prod --token=VERCEL_TOKEN
+          command: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
 
 workflows:
   # Below is the definition of your workflow.

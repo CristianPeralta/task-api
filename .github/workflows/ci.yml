@@ -47,6 +47,14 @@ jobs:
       - name: Run e2e tests
         run: npm run test:e2e
         # Executes the test command to run e2e tests
+  trigger-circleci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy on circle
+        id: TriggerCircleId
+        uses: circleci/trigger_circleci_pipeline@v1.0.5
+        env:
+          CCI_TOKEN: ${{ secrets.CCI_TOKEN }}
   Deploy-Production:
     needs: build
     runs-on: ubuntu-latest

@@ -32,11 +32,11 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-        name: List GHA parameters
-        command: |
-          echo "GHA_Action: $GHA_Action"
-          echo "GHA_Event: $GHA_Event"
-          echo "GHA_Meta: $GHA_Meta"
+          name: List GHA parameters
+          command: |
+            echo "GHA_Action: $GHA_Action"
+            echo "GHA_Event: $GHA_Event"
+            echo "GHA_Meta: $GHA_Meta"
 
   test:
     # Test job configuration

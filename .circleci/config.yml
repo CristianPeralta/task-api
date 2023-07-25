@@ -105,7 +105,8 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
   sample:
     jobs:
-      - show-gha-vars
+      - show-gha-vars:
+          when: << pipeline.parameters.GHA_Action >>
       - build:
           filters:
             branches:

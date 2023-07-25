@@ -29,6 +29,8 @@ jobs:
       - run:
           name: List GHA parameters
           command: |
+            echo "parameters: << pipeline.parameters >> :" << pipeline.parameters >>
+            echo "parameters: << pipeline.parameters.GHA_Action >> :" << pipeline.parameters.GHA_Action >>
             echo "GHA_Action: $GHA_Action"
             echo "GHA_Event: $GHA_Event"
             echo "GHA_Meta: $GHA_Meta"

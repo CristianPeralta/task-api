@@ -13,40 +13,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        # Checks out the code from the repository
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 19.8.1
-        # Sets up the Node.js environment with the specified version
-
-      - name: Install dependencies
-        run: npm ci
-        # Installs project dependencies using npm
-
-      - name: Run unit tests
-        run: npm run test
-        # Executes the test command to run unit tests
-
-      - name: Copy .env.example to .env
-        run: cp .env.example .env
-        # Copy .env.example to .env
-      - name: Set up MongoDB
-        uses: supercharge/mongodb-github-action@1.8.0
-        with:
-          mongodb-version: 6.0
-        # Set up MongoDB version 6.0
-
-      - name: Run e2e tests
-        run: npm run test:e2e
-        # Executes the test command to run e2e tests
   trigger-circleci:
     runs-on: ubuntu-latest
     steps:
@@ -55,28 +21,64 @@ jobs:
         uses: CircleCI-Public/trigger-circleci-pipeline-action@v1.0.5
         env:
           CCI_TOKEN: ${{ secrets.CCI_TOKEN }}
-  Deploy-Production:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: 18.15.0
-        # Sets up the Node.js environment with the specified version
+  # build:
+  # runs-on: ubuntu-latest
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+  # steps:
+  # - name: Checkout code
+  # uses: actions/checkout@v2
+  # Checks out the code from the repository
 
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+  #- name: Set up Node.js
+  # uses: actions/setup-node@v2
+  # with:
+  # node-version: 19.8.1
+  # Sets up the Node.js environment with the specified version
 
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+  # - name: Install dependencies
+  # run: npm ci
+  # Installs project dependencies using npm
 
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+  # - name: Run unit tests
+  # run: npm run test
+  # Executes the test command to run unit tests
+
+  # - name: Copy .env.example to .env
+  # run: cp .env.example .env
+  # Copy .env.example to .env
+  # - name: Set up MongoDB
+  # uses: supercharge/mongodb-github-action@1.8.0
+  # with:
+  # mongodb-version: 6.0
+  # Set up MongoDB version 6.0
+
+  # - name: Run e2e tests
+  # run: npm run test:e2e
+  # Executes the test command to run e2e tests
+
+  # Deploy-Production:
+  # needs: build
+  # runs-on: ubuntu-latest
+  # if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+  # steps:
+  # - name: Checkout code
+  # uses: actions/checkout@v2
+
+  # - name: Set up Node.js
+  # uses: actions/setup-node@v2
+  # with:
+  # node-version: 18.15.0
+  # Sets up the Node.js environment with the specified version
+
+  # - name: Install Vercel CLI
+  # run: npm install --global vercel@latest
+
+  # - name: Pull Vercel Environment Information
+  # run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+  # - name: Build Project Artifacts
+  # run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  # - name: Deploy Project Artifacts to Vercel
+  # run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}

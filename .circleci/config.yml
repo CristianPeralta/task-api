@@ -22,6 +22,17 @@ orbs:
   node: circleci/node@5.1.0
 
 jobs:
+  show-gha-vars:
+    docker:
+      - image: node:20-alpine
+    steps:
+      - run:
+          name: List GHA parameters
+          command: |
+            echo "GHA_Action: $GHA_Action"
+            echo "GHA_Event: $GHA_Event"
+            echo "GHA_Meta: $GHA_Meta"
+
   build:
     # Build job configuration
     docker:
@@ -31,12 +42,6 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run:
-          name: List GHA parameters
-          command: |
-            echo "GHA_Action: $GHA_Action"
-            echo "GHA_Event: $GHA_Event"
-            echo "GHA_Meta: $GHA_Meta"
 
   test:
     # Test job configuration
@@ -100,6 +105,7 @@ workflows:
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/configuration-reference/#workflows
   sample:
     jobs:
+      - show-gha-vars
       - build:
           filters:
             branches:

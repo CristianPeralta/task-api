@@ -20,5 +20,8 @@ COPY . .
 EXPOSE 3000
 EXPOSE 27017
 
+# Use the .env.example file to set environment variables (optional)
+COPY .env.example .env
+
 # Comando para iniciar la aplicación
 CMD ["npm", "run", "start"]

@@ -112,7 +112,7 @@ workflows:
     when: << pipeline.parameters.GHA_Action >>
     jobs:
       when:
-        equal: ['release' || 'pull_request', << pipeline.parameters.GHA_Event >>]
+        equal: ['release', 'pull_request', << pipeline.parameters.GHA_Event >>]
       - build:
           filters:
             branches:

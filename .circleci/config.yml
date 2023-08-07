@@ -109,12 +109,10 @@ workflows:
     jobs:
       - show-gha-vars
   sample:
-    when: << pipeline.parameters.GHA_Action >>
+    when:
+      equal: ['release', 'pull_request', << pipeline.parameters.GHA_Event >>]
     jobs:
       - build:
-          when:
-            equal:
-              ['release', 'pull_request', << pipeline.parameters.GHA_Event >>]
           filters:
             branches:
               only: main
@@ -124,9 +122,11 @@ workflows:
           filters:
             branches:
               only: main
+  deploy:
+    when:
+      equal: ['release', << pipeline.parameters.GHA_Event >>]
+    jobs:
       - deploy-to-vercel:
-          when:
-            equal: ['release', << pipeline.parameters.GHA_Event >>]
           requires:
             - test
           filters:

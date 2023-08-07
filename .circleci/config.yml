@@ -124,7 +124,7 @@ workflows:
         - equal: [pull_request, << pipeline.parameters.GHA_Event >>]
         - equal: [release, << pipeline.parameters.GHA_Event >>]
     jobs:
-      - build:
+      - build
       - test:
           requires:
             - build

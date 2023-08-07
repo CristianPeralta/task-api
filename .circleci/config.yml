@@ -29,11 +29,10 @@ jobs:
       - run:
           name: List GHA parameters
           command: |
-            echo << pipeline >>
-            echo << pipeline.parameters.GHA_Action >>
-            echo "GHA_Action: $GHA_Action"
-            echo "GHA_Event: $GHA_Event"
-            echo "GHA_Meta: $GHA_Meta"
+            echo "GHA_Actor is << pipeline.parameters.GHA_Actor >>"
+            echo "GHA_Action is << pipeline.parameters.GHA_Action >>"
+            echo "GHA_Event is << pipeline.parameters.GHA_Event >>"
+            echo "GHA_Meta is << pipeline.parameters.GHA_Meta >>"
 
   build:
     # Build job configuration

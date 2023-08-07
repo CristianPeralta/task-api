@@ -122,7 +122,7 @@ workflows:
     when:
       or:
         - equal: [pull_request, << pipeline.parameters.GHA_Event >>]
-        - equal: [release, << pipeline.parameters.GHA_Event >>]
+        - equal: [push, << pipeline.parameters.GHA_Event >>]
     jobs:
       - build
       - test:
@@ -130,7 +130,7 @@ workflows:
             - build
   deploy:
     when:
-      equal: [release, << pipeline.parameters.GHA_Event >>]
+      equal: [push, << pipeline.parameters.GHA_Event >>]
     jobs:
       - deploy-to-vercel:
           requires:

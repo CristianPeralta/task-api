@@ -111,9 +111,10 @@ workflows:
   sample:
     when: << pipeline.parameters.GHA_Action >>
     jobs:
-      when:
-        equal: ['release', 'pull_request', << pipeline.parameters.GHA_Event >>]
       - build:
+          when:
+            equal:
+              ['release', 'pull_request', << pipeline.parameters.GHA_Event >>]
           filters:
             branches:
               only: main

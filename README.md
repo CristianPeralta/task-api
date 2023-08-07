@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/-CRUD_Operations-green" alt="CRUD Operations">
   <img src="https://img.shields.io/badge/-Swagger-red" alt="Swagger">
   <img src="https://img.shields.io/badge/-Docker-blue" alt="Docker">
+  <img src="https://circleci.com/gh/CristianPeralta/task-api.svg?style=shield" alt="CircleCI">
   <img src="https://img.shields.io/badge/-Unit_Testing-yellow" alt="Unit Testing">
   <img src="https://img.shields.io/badge/-E2E_Testing-purple" alt="E2E Testing">
 </div>

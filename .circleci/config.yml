@@ -110,7 +110,9 @@ workflows:
       - show-gha-vars
   show-two:
     when:
-      equal: [pull_request, << pipeline.parameters.GHA_Event >>]
+      or:
+        - equal: [pull_request, << pipeline.parameters.GHA_Event >>]
+        - equal: [release, << pipeline.parameters.GHA_Event >>]
     jobs:
       - show-gha-vars
   build_and_test:

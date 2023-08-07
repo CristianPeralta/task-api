@@ -106,6 +106,10 @@ workflows:
     when:
       equal: [push, << pipeline.parameters.GHA_Event >>]
     jobs:
+      - build
+      - test:
+        requires:
+          - build
       - deploy-to-vercel:
           requires:
             - test
